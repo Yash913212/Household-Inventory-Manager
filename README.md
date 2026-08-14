@@ -1,101 +1,126 @@
 # Household Inventory Manager
 
-A modern, robust household inventory management web application built using **Server-Rendered Django Templates (MVT Architecture)**. The application enables users to categorize and track household items by room/location, featuring full CRUD operations, template inheritance, modular CSS architecture, accessible form controls, and production-ready static asset management.
+A clean, lightweight Django web app to keep track of household items, tools, and supplies across different rooms in your home.
 
 ---
 
-## Architecture & Features
+## What It Does
 
-- **Server-Side Rendering (SSR)**: Generates full HTML on the server for instant page loads, search indexability, and clean state handling without frontend build dependencies.
-- **Django MVT Pattern**:
-  - **Models**: `Location` and `Item` relational schema with cascade deletion.
-  - **Views**: Clean, generic Class-Based Views (`ListView`, `CreateView`, `UpdateView`, `DeleteView`).
-  - **Templates**: Reusable layout inheritance (`base.html`) with block overrides for content and page-specific stylesheets.
-- **Modular CSS Architecture**:
-  - `inventory/static/css/base/main.css`: Core design tokens, CSS variables, typography, reset, and global containers.
-  - `inventory/static/css/components/`: Reusable components (`navbar.css`, `buttons.css`, `cards.css`, `forms.css`).
-  - `inventory/static/css/pages/`: Page-specific scoped styles (`item_list.css`, `item_form.css`, `location_list.css`, `location_form.css`, `confirm_delete.css`).
-- **Accessible Form Controls**: Clear `:focus` and `:focus-visible` outlines, semantic `<label>` associations, and distinct field-level validation errors.
-- **Production Asset Pipeline**: Configured `STATIC_ROOT` and staticfiles collection workflow.
+- **Organize by Room / Location**: Group items into custom locations (e.g. *Kitchen Pantry*, *Garage Workshop*, *Home Office*). Deleting a room safely cascades to its stored items.
+- **Search & Quick Filtering**: Search across item names, descriptions, or locations, or filter your list down to a specific room with one click.
+- **Live Inventory Counts**: See at-a-glance totals for unique items, total item quantities, and per-room item counts.
+- **Lightweight, Modular UI**: Built with server-rendered Django templates and a custom vanilla CSS design system—no heavy frontend build steps or node dependencies needed.
+- **Sample Data Ready**: Comes with a built-in management command to populate realistic dummy data right out of the box.
 
 ---
 
-## Setup and Installation
+## Tech Stack
 
-1. **Clone the repository and enter the directory**:
-   ```bash
-   cd Household-Inventory-Manager
-   ```
-
-2. **Create and activate a virtual environment**:
-   - On Windows (PowerShell):
-     ```powershell
-     python -m venv venv
-     .\venv\Scripts\Activate.ps1
-     ```
-   - On Linux/macOS:
-     ```bash
-     python3 -m venv venv
-     source venv/bin/activate
-     ```
-
-3. **Install project dependencies**:
-   Install the required packages specified in `requirements.txt`:
-   ```bash
-   pip install -r requirements.txt
-   ```
+- **Backend**: Python 3.10+, Django 5+ (Class-Based Views, Django ORM)
+- **Database**: SQLite (default, zero setup required)
+- **Frontend / Styling**: Server-side Django Templates, Semantic HTML5, Modular Vanilla CSS
 
 ---
 
-## Running the Application
+## Project Structure
 
-1. **Apply database migrations**:
-   Create the database schema for the application:
-   ```bash
-   python manage.py makemigrations
-   python manage.py migrate
-   ```
-
-2. **Start the development server**:
-   Launch the local Django development server:
-   ```bash
-   python manage.py runserver
-   ```
-   Open your browser and navigate to `http://127.0.0.1:8000/`. The root URL will automatically direct you to `/items/`.
-
-3. **Accessing Application Endpoints**:
-   - **Items List**: `GET /items/`
-   - **Add Item**: `GET /items/add/`, `POST /items/add/`
-   - **Edit Item**: `GET /items/<pk>/edit/`, `POST /items/<pk>/edit/`
-   - **Delete Item**: `GET /items/<pk>/delete/`, `POST /items/<pk>/delete/`
-   - **Locations List**: `GET /locations/`
-   - **Add Location**: `GET /locations/add/`, `POST /locations/add/`
-   - **Edit Location**: `GET /locations/<pk>/edit/`, `POST /locations/<pk>/edit/`
-   - **Delete Location**: `GET /locations/<pk>/delete/`, `POST /locations/<pk>/delete/`
+```text
+Household-Inventory-Manager/
+├── household_inventory/       # Django project settings and root URL routing
+├── inventory/                 # Main inventory application
+│   ├── management/commands/   # Custom commands (seed_inventory.py)
+│   ├── migrations/            # Database migrations
+│   ├── static/css/            # Modular CSS (base tokens, components, page styles)
+│   ├── templates/inventory/   # App templates (item & location CRUD views)
+│   ├── forms.py               # Django ModelForms with validation
+│   ├── models.py              # Item and Location models
+│   ├── tests.py               # Automated test suite
+│   ├── urls.py                # URL endpoints for items and locations
+│   └── views.py               # Class-based views (ListView, CreateView, etc.)
+├── templates/                 # Global base layout (base.html)
+├── manage.py
+└── requirements.txt
+```
 
 ---
 
-## Static Files Configuration & Production
+## Quickstart Guide
 
-In development (`DEBUG = True`), Django automatically serves static assets from each app's `static/` folder. For production environments (`DEBUG = False`), static assets must be gathered into a single root directory for a reverse proxy (e.g., Nginx, WhiteNoise) to serve.
+### 1. Clone the repository and navigate into the folder
+```bash
+git clone https://github.com/Yash913212/Household-Inventory-Manager.git
+cd Household-Inventory-Manager
+```
 
-1. **Static Files Settings** in `household_inventory/settings.py`:
-   ```python
-   STATIC_URL = '/static/'
-   STATIC_ROOT = BASE_DIR / 'staticfiles'
-   ```
+### 2. Create and activate a virtual environment
 
-2. **Collect Static Files**:
-   Run the `collectstatic` command to compile and copy all static files into `STATIC_ROOT`:
-   ```bash
-   python manage.py collectstatic --noinput
-   ```
+**On Windows (PowerShell):**
+```powershell
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+```
+
+**On macOS / Linux:**
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+### 3. Install dependencies
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Run migrations
+```bash
+python manage.py migrate
+```
+
+### 5. (Optional) Load sample data
+To populate the database with starter locations and items:
+```bash
+python manage.py seed_inventory
+```
+
+### 6. Start the development server
+```bash
+python manage.py runserver
+```
+
+Open your browser and visit **`http://127.0.0.1:8000/`**. The root URL will automatically take you to the items inventory list.
 
 ---
 
-## Running Automated Tests
+## Available Pages & Endpoints
 
-Run the automated test suite to verify models, views, forms, template inheritance, CSS architecture, and accessibility:
+| URL Route | Description |
+| :--- | :--- |
+| `/items/` | Browse, search, and filter all inventory items |
+| `/items/add/` | Add a new item (name, description, quantity, location) |
+| `/items/<id>/edit/` | Edit an existing item |
+| `/items/<id>/delete/` | Confirm and remove an item |
+| `/locations/` | View all rooms/locations and item counts |
+| `/locations/add/` | Create a new location |
+| `/locations/<id>/edit/` | Rename an existing location |
+| `/locations/<id>/delete/` | Delete a location (and its associated items) |
+
+---
+
+## Running Tests
+
+To run the automated test suite:
 ```bash
 python manage.py test
 ```
+
+---
+
+## Static Files & Deployment
+
+In development, Django automatically serves CSS files from `inventory/static/`.
+
+When deploying to production (`DEBUG = False`):
+```bash
+python manage.py collectstatic --noinput
+```
+This gathers all assets into the `staticfiles/` folder to be served by WhiteNoise, Nginx, or your cloud provider.
