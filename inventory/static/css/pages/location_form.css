@@ -1,0 +1,23 @@
+/* ==========================================================================
+   Page Stylesheet: Location Form View (css/pages/location_form.css)
+   ========================================================================== */
+
+.location-form-container {
+  max-width: 580px;
+  margin: 0 auto;
+}
+
+.location-form-header {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.location-form-header h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.location-form-header p {
+  color: var(--slate-500);
+  font-size: 0.875rem;
+}

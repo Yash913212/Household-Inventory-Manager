@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ action }} Item &mdash; Household Inventory Manager{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/pages/item_form.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="item-form-container">
+    <!-- Breadcrumb / Back Link -->
+    <div style="margin-bottom: 1.25rem;">
+        <a href="{% url 'item_list' %}" class="btn btn-outline btn-sm">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Back to Items
+        </a>
+    </div>
+
+    <div class="form-card">
+        <div class="item-form-header">
+            <h2>{{ action }} Inventory Item</h2>
+            <p>Fill in the item details below to update your household inventory records.</p>
+        </div>
+
+        {% if not has_locations and action == 'Add' %}
+        <div class="item-form-note">
+            <strong>Note:</strong> You don't have any locations created yet. We recommend <a href="{% url 'location_create' %}" style="text-decoration: underline; font-weight: 700;">adding a location first</a> before adding items.
+        </div>
+        {% endif %}
+
+        {% if form.non_field_errors %}
+        <div class="form-errors-summary" role="alert">
+            <h4>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+                Please correct the following errors:
+            </h4>
+            <ul class="errorlist">
+                {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <form method="POST" novalidate class="form-layout">
+            {% csrf_token %}
+
+            <!-- Item Name -->
+            <div class="form-group {% if form.name.errors %}has-error{% endif %}">
+                <label for="{{ form.name.id_for_label }}" class="form-label label-required">
+                    {{ form.name.label }}
+                </label>
+                {{ form.name }}
+                {% if form.name.help_text %}
+                    <span class="form-help">{{ form.name.help_text }}</span>
+                {% endif %}
+                {% if form.name.errors %}
+                    <ul class="errorlist" role="alert">
+                        {% for error in form.name.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+
+            <!-- Location & Quantity (2 columns) -->
+            <div class="form-row">
+                <div class="form-group {% if form.location.errors %}has-error{% endif %}">
+                    <label for="{{ form.location.id_for_label }}" class="form-label label-required">
+                        {{ form.location.label }}
+                    </label>
+                    {{ form.location }}
+                    {% if form.location.help_text %}
+                        <span class="form-help">{{ form.location.help_text }}</span>
+                    {% endif %}
+                    {% if form.location.errors %}
+                        <ul class="errorlist" role="alert">
+                            {% for error in form.location.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+
+                <div class="form-group {% if form.quantity.errors %}has-error{% endif %}">
+                    <label for="{{ form.quantity.id_for_label }}" class="form-label label-required">
+                        {{ form.quantity.label }}
+                    </label>
+                    {{ form.quantity }}
+                    {% if form.quantity.help_text %}
+                        <span class="form-help">{{ form.quantity.help_text }}</span>
+                    {% endif %}
+                    {% if form.quantity.errors %}
+                        <ul class="errorlist" role="alert">
+                            {% for error in form.quantity.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div class="form-group {% if form.description.errors %}has-error{% endif %}">
+                <label for="{{ form.description.id_for_label }}" class="form-label">
+                    {{ form.description.label }}
+                </label>
+                {{ form.description }}
+                {% if form.description.help_text %}
+                    <span class="form-help">{{ form.description.help_text }}</span>
+                {% endif %}
+                {% if form.description.errors %}
+                    <ul class="errorlist" role="alert">
+                        {% for error in form.description.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+
+            <div class="form-actions">
+                <a href="{% url 'item_list' %}" class="btn btn-outline">Cancel</a>
+                <button type="submit" class="btn btn-primary">
+                    {% if action == 'Edit' %}Save Changes{% else %}Create Item{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
