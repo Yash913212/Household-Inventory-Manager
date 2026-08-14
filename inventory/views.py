@@ -5,7 +5,7 @@ from django.views.generic import (
     UpdateView,
     DeleteView,
 )
-from django.db.models import Count, Q
+from django.db.models import Count, Q, Sum
 from .models import Location, Item
 from .forms import LocationForm, ItemForm
 
@@ -95,7 +95,8 @@ class ItemListView(ListView):
         context['selected_location'] = self.request.GET.get('location', '')
         context['search_query'] = self.request.GET.get('q', '').strip()
         context['total_items_count'] = Item.objects.count()
-        context['total_quantity_sum'] = sum(item.quantity for item in Item.objects.all())
+        total_qty = Item.objects.aggregate(total=Sum('quantity'))['total']
+        context['total_quantity_sum'] = total_qty if total_qty is not None else 0
         return context
 
 

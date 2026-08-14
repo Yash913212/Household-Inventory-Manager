@@ -1,7 +1,5 @@
-import os
 from pathlib import Path
 from django.test import TestCase, Client
-from django.urls import reverse
 from django.conf import settings
 from django.db import models
 from .models import Location, Item
